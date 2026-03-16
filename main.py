@@ -1,6 +1,6 @@
 import sys
 from grammar_reader import read_grammar
-from grammar_parser import parse_grammar
+from grammar_parser import parse_grammar, validate_grammar
 from first import compute_first
 from follow import compute_follow
 
@@ -27,6 +27,7 @@ def main():
     # 2. Pipeline - Parser
     grammar = parse_grammar(lines)
     print("\n[Gramática Parseada Exitosamente]")
+    validate_grammar(grammar)
     grammar.display()
     
     # 3. Pipeline - Algoritmo FIRST

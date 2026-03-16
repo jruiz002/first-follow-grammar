@@ -21,6 +21,10 @@ La arquitectura está diseñada para que cada módulo tenga una única responsab
         ▼
 [Objeto Grammar (Estructura de Datos)]
         │
+        ▼
+   Validation (grammar_parser.py)
+        │ - Advierte sobre posibles errores de tokenización (ej: falta de espacios).
+        │
         ├──────────────────────────┐
         ▼                          │
  3. Conjuntos FIRST (first.py)     │
@@ -50,6 +54,7 @@ La arquitectura está diseñada para que cada módulo tenga una única responsab
   - Símbolo inicial.
   - Conjunto de Terminales y No-Terminales.
   - Diccionario de producciones (`A -> ['B', 'C'] | ['d']`).
+- **Validación:** Incluye una función `validate_grammar()` que advierte al usuario si hay terminales concatenados sospechosos (ej: `(A)` vs `( A )`).
 - **Responsabilidad:** Identificar la sintaxis de las reglas (ej: separar el lado izquierdo del lado derecho de la producción, manejar el operador `|`).
 
 ### 3. `first.py` (Algoritmo FIRST)

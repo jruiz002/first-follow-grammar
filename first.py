@@ -24,38 +24,15 @@ def compute_first(grammar: Grammar) -> dict[str, set[str]]:
         
         for nt in grammar.non_terminals:
             for production in grammar.productions[nt]:
-                # Para cada producción A -> X1 X2 ... Xk
+                # Calcular FIRST(rhs) usando la función utilitaria
+                rhs_first = compute_first_of_string(production, first_sets, grammar.epsilon)
                 
-                # Llevar la pista de si todos los símbolos hasta Xi pueden derivar epsilon
-                all_can_derive_epsilon = True
+                # Actualizar FIRST(nt)
+                before_size = len(first_sets[nt])
+                first_sets[nt].update(rhs_first)
                 
-                for symbol in production:
-                    if symbol == grammar.epsilon:
-                        if grammar.epsilon not in first_sets[nt]:
-                            first_sets[nt].add(grammar.epsilon)
-                            changed = True
-                        break # Si hay un epsilon directo en una cadena, detenemos el consumo
-                    
-                    # Agregar FIRST(symbol) - {e} a FIRST(nt)
-                    original_size = len(first_sets[nt])
-                    
-                    symbol_first = first_sets[symbol]
-                    first_sets[nt].update(symbol_first - {grammar.epsilon})
-                    
-                    if len(first_sets[nt]) > original_size:
-                        changed = True
-                        
-                    # Si el símbolo actual no puede derivar epsilon, detenemos el avance en esta regla de producción
-                    if grammar.epsilon not in symbol_first:
-                        all_can_derive_epsilon = False
-                        break
-                        
-                # Si todos los X1...Xk en la parte derecha pueden derivar a epsilon,
-                # entonces A =>* e
-                if all_can_derive_epsilon and production != [grammar.epsilon]:
-                    if grammar.epsilon not in first_sets[nt]:
-                        first_sets[nt].add(grammar.epsilon)
-                        changed = True
+                if len(first_sets[nt]) > before_size:
+                    changed = True
 
     return first_sets
 

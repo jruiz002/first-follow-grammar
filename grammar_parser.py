@@ -1,3 +1,5 @@
+import re
+
 class Grammar:
     def __init__(self):
         self.start_symbol = None
@@ -16,6 +18,16 @@ class Grammar:
             for prod in prods:
                 print(f"  {nt} -> {' '.join(prod)}")
 
+def validate_grammar(grammar: Grammar):
+    """
+    Verifica posibles errores comunes en la gramática, como falta de espacios.
+    """
+    for term in grammar.terminals:
+        # Heurística: Si un terminal tiene paréntesis/corchetes pegados a letras (ej: '(E')
+        # Probablemente sea un error de espaciado.
+        if len(term) > 1 and not term.isalnum():
+            if re.search(r'[(){}\[\]].*[a-zA-Z0-9]', term) or re.search(r'[a-zA-Z0-9].*[(){}\[\]]', term):
+                print(f"ADVERTENCIA: El terminal '{term}' parece sospechoso. Asegúrate de separar los símbolos con espacios (ej: '( E )' en lugar de '(E)').")
 
 def parse_grammar(lines: list[str]) -> Grammar:
     """
